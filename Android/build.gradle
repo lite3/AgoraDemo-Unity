@@ -75,16 +75,25 @@ android {
 
 
 // This is the actual solution, as in http://stackoverflow.com/a/19037807/1002054
-task clearJar(type: Delete) {
+task clearSDK(type: Delete) {
     delete '../Assets/Plugins/Android/Agora/libs/AgoraSDK.jar'
+    delete '../Assets/Plugins/Android/Agora/AndroidManifest.xml'
 }
 
-task makeJar(type: Copy) {
+task copyJar(type: Copy) {
     from('build/intermediates/bundles/release')
     into('../Assets/Plugins/Android/Agora/libs')
     include('classes.jar')
     rename ('classes.jar', 'AgoraSDK.jar')
 }
 
-makeJar.dependsOn(clearJar, build)
+task copyXML(type: Copy) {
+    from('.')
+    into('../Assets/Plugins/Android/Agora')
+    include('AndroidManifest.xml')
+}
+
+task copySDK() {}
+
+copySDK.dependsOn(clearSDK, copyJar, copyXML, build)
 
