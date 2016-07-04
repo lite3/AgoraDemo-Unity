@@ -16,7 +16,7 @@ public class AudioTest : MonoBehaviour {
         using (AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
         {
             AndroidJavaObject curActivity = jc.GetStatic<AndroidJavaObject>("currentActivity");
-            agoraSDK = new AndroidJavaObject("io.agora.AgoraSDK", curActivity);
+            agoraSDK = new AndroidJavaObject("com.litefeel.libagorasdk.AgoraSDK", curActivity);
         }
 #endif
         vendorKeyInput.text = "10cc99f99cfc40a5b7ab2c1de6c09e0c";
