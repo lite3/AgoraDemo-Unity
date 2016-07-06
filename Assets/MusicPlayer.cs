@@ -16,11 +16,11 @@ public class MusicPlayer : MonoBehaviour {
         switch(Application.platform)
         {
             case RuntimePlatform.Android:
-                url = Application.streamingAssetsPath + "/Android/musice.assetbundle";
+                url = Application.streamingAssetsPath + "/Android/music.assetbundle";
                 break;
             case RuntimePlatform.WindowsEditor:
             case RuntimePlatform.WindowsPlayer:
-                url = "file://" + Application.streamingAssetsPath + "Windows/musice.assetbundle";
+                url = "file://" + Application.streamingAssetsPath + "Windows/music.assetbundle";
                 break;
         }
         WWW www = new WWW(url);
