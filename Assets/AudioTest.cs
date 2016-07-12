@@ -3,40 +3,37 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class AudioTest : MonoBehaviour {
-    
-    private AndroidJavaObject agoraSDK = null;
+
+    private IAgoraPlugin plugin;
 
     public InputField vendorKeyInput;
     public InputField channelIdInput;
     public Text logText;
     
 	void Start () {
-#if UNITY_ANDROID && !UNITY_EDITOR
-        AndroidJNIHelper.debug = true;
-        using (AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-        {
-            AndroidJavaObject curActivity = jc.GetStatic<AndroidJavaObject>("currentActivity");
-            agoraSDK = new AndroidJavaObject("com.litefeel.libagorasdk.AgoraSDK", curActivity);
-        }
+#if UNITY_ANDROID
+        plugin = new AudioTestAndroid();
+#elif UNITY_IPHONE
+        plugin = new AudioTestIOS();
 #endif
         vendorKeyInput.text = "10cc99f99cfc40a5b7ab2c1de6c09e0c";
     }
 
     public void InitSDK()
     {
-        agoraSDK.Call("initSDK", new[] { vendorKeyInput.text });
+        plugin.InitSDK(vendorKeyInput.text);
         Log("init sdk with vendor key:" + vendorKeyInput.text);
     }
     
 	public void JoinChannel()
     {
-        agoraSDK.Call("joinChannel", new[] { channelIdInput.text });
+        plugin.JoinChannel(channelIdInput.text);
         Log("joinChannel with channel id:" + channelIdInput.text);
     }
 
     public void LeaveChannel()
     {
-        agoraSDK.Call("leaveChannel");
+        plugin.LeaveChannel();
         Log("leaveChanne");
     }
 
