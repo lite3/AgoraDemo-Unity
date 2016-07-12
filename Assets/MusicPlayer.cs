@@ -22,22 +22,38 @@ public class MusicPlayer : MonoBehaviour {
             case RuntimePlatform.WindowsPlayer:
                 url = "file://" + Application.streamingAssetsPath + "Windows/music.assetbundle";
                 break;
+			case RuntimePlatform.IPhonePlayer:
+				url = "file://" + Application.streamingAssetsPath + "/iOS/music.assetbundle";
+				break;
         }
+		print ("url:" + url);
         WWW www = new WWW(url);
         yield return www;
-        AssetBundle ab = www.assetBundle;
-        string[] names = ab.GetAllAssetNames();
-        foreach (var name in names)
-        {
-            print(name);
-        }
-        AudioClip audioClip = ab.LoadAsset<AudioClip>(names[0]);
-        GameObject go = new GameObject();
-        AudioSource audioSource = go.AddComponent<AudioSource>();
-        audioSource.clip = audioClip;
-        audioSource.loop = true;
-        audioSource.Play();
-    }
+		if (www.error != null) {
+			print (www.error);
+		}else {
+	        AssetBundle ab = www.assetBundle;
+	        string[] names = ab.GetAllAssetNames();
+	        foreach (var name in names)
+	        {
+	            print(name);
+	        }
+	        AudioClip audioClip = ab.LoadAsset<AudioClip>(names[0]);
+	        GameObject go = new GameObject();
+	        AudioSource audioSource = go.AddComponent<AudioSource>();
+	        audioSource.clip = audioClip;
+	        audioSource.loop = true;
+	        audioSource.Play();
+			ab.Unload (false);
+			GameObject.Destroy (ab);
+	    }
+		www.Dispose ();
+	}
+
+	public void TryLoadMusic(string message)
+	{
+		StartCoroutine (LoadMusic ());
+	}
 	
 	// Update is called once per frame
 	void Update () {

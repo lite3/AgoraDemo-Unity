@@ -16,7 +16,7 @@ public class AudioTest : MonoBehaviour {
 #elif UNITY_IPHONE
         plugin = new AudioTestIOS();
 #endif
-        vendorKeyInput.text = "10cc99f99cfc40a5b7ab2c1de6c09e0c";
+		vendorKeyInput.text = "c45dc2ca378f495ca1168dd2bf2a5696";
     }
 
     public void InitSDK()
