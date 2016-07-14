@@ -16,17 +16,28 @@ public class AudioTest : MonoBehaviour {
 #elif UNITY_IPHONE
         plugin = new AudioTestIOS();
 #endif
-		vendorKeyInput.text = "c45dc2ca378f495ca1168dd2bf2a5696";
+        string vendorKey = "c45dc2ca378f495ca1168dd2bf2a5696";
+        if (PlayerPrefs.HasKey("vendorKey"))
+        {
+            vendorKey = PlayerPrefs.GetString("vendorKey");
+        }
+        vendorKeyInput.text = vendorKey;
+        if (PlayerPrefs.HasKey("channelId"))
+        {
+            channelIdInput.text = PlayerPrefs.GetString("channelId");
+        }
     }
 
     public void InitSDK()
     {
+        PlayerPrefs.SetString("vendorKey", vendorKeyInput.text);
         plugin.InitSDK(vendorKeyInput.text);
         Log("init sdk with vendor key:" + vendorKeyInput.text);
     }
     
 	public void JoinChannel()
     {
+        PlayerPrefs.SetString("channelId", channelIdInput.text);
         plugin.JoinChannel(channelIdInput.text);
         Log("joinChannel with channel id:" + channelIdInput.text);
     }
@@ -35,6 +46,16 @@ public class AudioTest : MonoBehaviour {
     {
         plugin.LeaveChannel();
         Log("leaveChanne");
+    }
+
+    public void SetEnableLocalAudio(bool enable)
+    {
+
+    }
+
+    public void SetEnableRemoteAudio(bool enable)
+    {
+
     }
 
     public void Log(string message)

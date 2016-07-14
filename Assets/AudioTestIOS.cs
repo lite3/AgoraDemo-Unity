@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_IPHONE
+using UnityEngine;
 using System.Collections;
 using System.Runtime.InteropServices;
 using System;
@@ -37,3 +38,4 @@ public class AudioTestIOS : IAgoraPlugin {
         leaveChannel();
     }
 }
+#endif
