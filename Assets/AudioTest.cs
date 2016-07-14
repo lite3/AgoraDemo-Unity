@@ -17,6 +17,10 @@ public class AudioTest : MonoBehaviour {
 #elif UNITY_IPHONE
         plugin = new AudioTestIOS();
 #endif
+        if (plugin != null)
+        {
+            plugin.InitPlugin();
+        }
         string vendorKey = "c45dc2ca378f495ca1168dd2bf2a5696";
         if (PlayerPrefs.HasKey("vendorKey"))
         {
@@ -27,6 +31,8 @@ public class AudioTest : MonoBehaviour {
         {
             channelIdInput.text = PlayerPrefs.GetString("channelId");
         }
+
+        versionText.text = plugin.GetSDKVersion();
     }
 
     public void InitSDK()
@@ -34,8 +40,6 @@ public class AudioTest : MonoBehaviour {
         PlayerPrefs.SetString("vendorKey", vendorKeyInput.text);
         plugin.InitSDK(vendorKeyInput.text);
         Log("init sdk with vendor key:" + vendorKeyInput.text);
-
-        versionText.text = plugin.GetSDKVersion();
     }
     
 	public void JoinChannel()

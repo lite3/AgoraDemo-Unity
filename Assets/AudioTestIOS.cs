@@ -15,6 +15,10 @@ public class AudioTestIOS : IAgoraPlugin {
     [DllImport("__Internal")]
     private static extern string getSDKVersion();
 
+    public void InitPlugin()
+    {
+    }
+
     public string GetSDKVersion()
     {
         return getSDKVersion();

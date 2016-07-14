@@ -40,6 +40,10 @@ public class AgoraSDK {
         rtcEngine.muteAllRemoteAudioStreams(!remoteAudioEnable);
 	}
 
+    public String getSDKVersion() {
+        return RtcEngine.getSdkVersion();
+    }
+
 	public void joinChannel(final String channelId) {
 		context.runOnUiThread(new Runnable() {
 			@Override

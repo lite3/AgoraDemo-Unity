@@ -8,6 +8,16 @@ public class AudioTestAndroid : IAgoraPlugin {
 
     private AndroidJavaObject agoraSDK = null;
 
+    public void InitPlugin()
+    {
+        AndroidJNIHelper.debug = true;
+        using (AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+        {
+            AndroidJavaObject curActivity = jc.GetStatic<AndroidJavaObject>("currentActivity");
+            agoraSDK = new AndroidJavaObject("com.litefeel.libagorasdk.AgoraSDK", curActivity);
+        }
+    }
+
     public string GetSDKVersion()
     {
         return agoraSDK.Call<string>("getSDKVersion");
@@ -15,15 +25,6 @@ public class AudioTestAndroid : IAgoraPlugin {
 
     public void InitSDK(string vendorKey)
     {
-        if (agoraSDK == null)
-        {
-            AndroidJNIHelper.debug = true;
-            using (AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-            {
-                AndroidJavaObject curActivity = jc.GetStatic<AndroidJavaObject>("currentActivity");
-                agoraSDK = new AndroidJavaObject("com.litefeel.libagorasdk.AgoraSDK", curActivity);
-            }
-        }
         agoraSDK.Call("initSDK", new[] { vendorKey });
     }
 
