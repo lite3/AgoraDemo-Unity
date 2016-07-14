@@ -8,4 +8,5 @@ public interface IAgoraPlugin {
     void JoinChannel(string channelId);
 
     void LeaveChannel();
+    string GetSDKVersion();
 }

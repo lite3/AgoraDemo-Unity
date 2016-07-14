@@ -12,17 +12,13 @@ public class AudioTestIOS : IAgoraPlugin {
     private static extern void joinChannel(string channelId);
     [DllImport("__Internal")]
     private static extern void leaveChannel();
+    [DllImport("__Internal")]
+    private static extern string getSDKVersion();
 
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
+    public string GetSDKVersion()
+    {
+        return getSDKVersion();
+    }
     public void InitSDK(string vendorKey)
     {
         initSDK(vendorKey);

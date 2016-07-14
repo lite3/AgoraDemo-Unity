@@ -7,7 +7,12 @@ using System;
 public class AudioTestAndroid : IAgoraPlugin {
 
     private AndroidJavaObject agoraSDK = null;
-    
+
+    public string GetSDKVersion()
+    {
+        return agoraSDK.Call<string>("getSDKVersion");
+    }
+
     public void InitSDK(string vendorKey)
     {
         if (agoraSDK == null)

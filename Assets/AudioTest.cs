@@ -9,6 +9,7 @@ public class AudioTest : MonoBehaviour {
     public InputField vendorKeyInput;
     public InputField channelIdInput;
     public Text logText;
+    public Text versionText;
     
 	void Start () {
 #if UNITY_ANDROID
@@ -33,6 +34,8 @@ public class AudioTest : MonoBehaviour {
         PlayerPrefs.SetString("vendorKey", vendorKeyInput.text);
         plugin.InitSDK(vendorKeyInput.text);
         Log("init sdk with vendor key:" + vendorKeyInput.text);
+
+        versionText.text = plugin.GetSDKVersion();
     }
     
 	public void JoinChannel()
