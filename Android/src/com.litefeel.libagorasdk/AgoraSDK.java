@@ -48,6 +48,8 @@ public class AgoraSDK {
 				Logger.log(TAG, "leaveChannel result=" + rusult);
 				rusult = rtcEngine.joinChannel("", channelId, "", 0);
                 Logger.log(TAG, "joinChannel result=" + rusult);
+				String result = rtcEngine.getParameter("che.audio.game.sound.cancellation","dummy");
+                Logger.log(TAG, "rtcEngine.getParameter(\"che.audio.game.sound.cancellation\",\"dummy\"):" + result);
 			}
 		});
 	}

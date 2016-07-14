@@ -7,7 +7,9 @@ import io.agora.rtc.IRtcEngineEventHandler;
 public class AgoraEventHandler extends IRtcEngineEventHandler {
 	
 	public static final String TAG = AgoraEventHandler.class.getSimpleName();
-	
+
+	private int networkQuality = 0;
+
 	@Override
 	public void onError(int err) {
 		Log.e(TAG, "Agora Voice SDK report error: " + err);
@@ -55,7 +57,7 @@ public class AgoraEventHandler extends IRtcEngineEventHandler {
 	@Override
     public void onAudioQuality(int uid, int quality, short delay, short lost) {
         String msg = String.format("user %d quality %s delay %d lost %d", (uid&0xFFFFFFFFL), getQualityDesc(quality), delay, lost);
-		Logger.log(TAG,  msg);
+		//Logger.log(TAG,  msg);
 	}
 
 	@Override
@@ -82,7 +84,10 @@ public class AgoraEventHandler extends IRtcEngineEventHandler {
 	@Override
 	public void onNetworkQuality(int quality) {
         String msg = String.format("network quality %s", getQualityDesc(quality));
-        Logger.log(TAG, msg);
+		if (quality != networkQuality) {
+            networkQuality = quality;
+            Logger.log(TAG, msg);
+		}
 	}
 
     @Override
