@@ -26,12 +26,13 @@ task clean(type: Delete) {
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(includes: ['agora-rtc-sdk.jar'], dir: '../Assets/Plugins/Android/Agora/libs')
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 17
+    buildToolsVersion '22.0.1'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
