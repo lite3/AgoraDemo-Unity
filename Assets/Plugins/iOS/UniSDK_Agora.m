@@ -72,6 +72,11 @@ static UniSDK_Agora *instance = nil;
 
 #pragma mark UniVoice
 
+- (NSString*)getSDKVersion
+{
+    return [AgoraRtcEngineKit getSdkVersion];
+}
+
 - (void)joinChannel:(NSString*)channelId roleId:(NSString*)roleId dynamicKey:(NSString*)dynamicKey
 {
     [self leaveChannel];
@@ -468,5 +473,13 @@ void leaveChannel()
 {
     [[UniSDK_Agora sharedInstance] leaveChannel];
     UnitySendMessage("AudioTest", "TryLoadMusic", "");
+}
+
+const char* getSDKVersion()
+{
+    const char *cstr = [[[UniSDK_Agora sharedInstance] getSDKVersion] UTF8String];
+    char *version = (char*)malloc(strlen(cstr)+1);
+    strcpy(version, cstr);
+    return version;
 }
 
