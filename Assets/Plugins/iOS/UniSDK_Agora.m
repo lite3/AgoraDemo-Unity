@@ -472,7 +472,6 @@ void joinChannel(const char* channelId)
 void leaveChannel()
 {
     [[UniSDK_Agora sharedInstance] leaveChannel];
-    UnitySendMessage("AudioTest", "TryLoadMusic", "");
 }
 
 const char* getSDKVersion()
