@@ -6,18 +6,28 @@ using UnityEngine.UI;
 public class MusicPlayer : MonoBehaviour {
 
     public Toggle musicBtn;
+    public Toggle echoCanncellationBtn;
 
-    private float[] bytes = new float[20];
+    private int simplesPerS;
+
+    private float[] bytes = new float[30];
+    private short[] datas = new short[30];
 
     private AudioClip audioClip;
     private AudioSource audioSource;
     private bool musicEnable = true;
+    private bool echoCanncellationEnable;
+
     // Use this for initialization
     void Start () {
         musicEnable = musicBtn.isOn;
+        echoCanncellationEnable = echoCanncellationBtn.isOn;
+
         StartCoroutine(LoadMusic());
-//         audioSource = GetComponent<AudioSource>();
-//         audioClip = audioSource.clip;
+        //         audioSource = GetComponent<AudioSource>();
+        //         audioClip = audioSource.clip;
+
+        CallNativeCode.Init();
 	}
 
     IEnumerator LoadMusic()
@@ -50,6 +60,9 @@ public class MusicPlayer : MonoBehaviour {
 	            print(name);
 	        }
 	        audioClip = ab.LoadAsset<AudioClip>(names[0]);
+            simplesPerS = (int)(audioClip.samples / audioClip.length);
+            bytes = new float[simplesPerS];
+            datas = new short[simplesPerS];
 	        GameObject go = new GameObject();
 	        audioSource = go.AddComponent<AudioSource>();
 	        audioSource.clip = audioClip;
@@ -76,17 +89,27 @@ public class MusicPlayer : MonoBehaviour {
             audioSource.mute = !musicEnable;
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    public void CheckeEhoCanncellation()
+    {
+        echoCanncellationEnable = echoCanncellationBtn.isOn;
+    }
+
+    // Update is called once per frame
+    void Update () {
         //audioClip.GetData(bytes, 0);
-//         if (audioSource != null && audioClip != null)
-//         {
+        if (audioSource != null && audioClip != null && !audioSource.mute && echoCanncellationEnable)
+        {
 //             Debug.Log("audioSource.timeSamples " + audioSource.timeSamples);
 //             Debug.Log("audioClip.samples " + audioClip.samples);
 //             Debug.Log("audioClip.channels " + audioClip.channels);
-//             audioClip.GetData(bytes, audioSource.timeSamples);
-//             Debug.Log("bytes:" + bytes[0] + " " + bytes[1] + " " + bytes[2] + " " + bytes[3]);
-//         }
+            audioClip.GetData(bytes, audioSource.timeSamples);
+            for(int i = bytes.Length-1; i >= 0; i--)
+            {
+                datas[i] = (short)(bytes[i] * short.MaxValue);
+            }
+            CallNativeCode.SetData(datas, bytes.Length, audioClip.frequency, audioClip.channels, 10);
+            //Debug.Log("bytes:" + bytes[0] + " " + bytes[1] + " " + bytes[2] + " " + bytes[3]);
+        }
 	}
 }
