@@ -22,10 +22,20 @@ public class MusicPlayer : MonoBehaviour {
     void Start () {
         musicEnable = musicBtn.isOn;
         echoCanncellationEnable = echoCanncellationBtn.isOn;
-
-        StartCoroutine(LoadMusic());
-        //         audioSource = GetComponent<AudioSource>();
-        //         audioClip = audioSource.clip;
+        
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource != null)
+        {
+            audioSource.loop = true;
+            audioSource.mute = !musicEnable;
+            audioClip = audioSource.clip;
+            simplesPerS = (int)(audioClip.samples / audioClip.length);
+            bytes = new float[simplesPerS];
+            datas = new short[simplesPerS];
+        } else
+        {
+            StartCoroutine(LoadMusic());
+        }
 
         CallNativeCode.Init();
 	}
