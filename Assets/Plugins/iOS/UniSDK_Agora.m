@@ -79,6 +79,10 @@ static UniSDK_Agora *instance = nil;
 
 - (void)joinChannel:(NSString*)channelId roleId:(NSString*)roleId dynamicKey:(NSString*)dynamicKey
 {
+    NSString *mode = [[AVAudioSession sharedInstance] mode];
+    NSLog(@"befor join, mode:%@", mode);
+    NSString *category = [[AVAudioSession sharedInstance] category];
+    NSLog(@"befor join, category:%@", category);
     [self leaveChannel];
     [agoraKit joinChannelByKey:dynamicKey channelName:channelId info:NULL uid:0 joinSuccess:^(NSString *channel, NSUInteger uid, NSInteger elapsed) {
         
@@ -92,13 +96,18 @@ static UniSDK_Agora *instance = nil;
 {
     [agoraKit leaveChannel:^(AgoraRtcStats *stat) {
     }];
-    //[agoraKit setEnableSpeakerphone:NO];
-    NSError *error = nil;
-    [[AVAudioSession sharedInstance] setActive:YES error:&error];
-    if (error != nil)
-    {
-        NSLog(@"NS ERROR code %ld, domain %@", error.code, error.domain );
-    }
+    
+    NSString *mode = [[AVAudioSession sharedInstance] mode];
+    NSLog(@"end leave, mode:%@", mode);
+    NSString *category = [[AVAudioSession sharedInstance] category];
+    NSLog(@"end leave, category:%@", category);
+    
+    [[AVAudioSession sharedInstance] setMode:AVAudioSessionModeDefault error:nil];
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
+    mode = [[AVAudioSession sharedInstance] mode];
+    NSLog(@"reset leave, mode:%@", mode);
+    category = [[AVAudioSession sharedInstance] category];
+    NSLog(@"reset leave, category:%@", category);
 }
 - (BOOL)isEnableLocalAudio
 {
