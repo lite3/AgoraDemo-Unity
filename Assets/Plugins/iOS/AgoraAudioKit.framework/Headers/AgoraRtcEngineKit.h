@@ -82,7 +82,7 @@ typedef NS_ENUM(NSInteger, AgoraRtcErrorCode) {
     AgoraRtc_Error_Adm_Record_Abnormal_Frequency = 1021,
     AgoraRtc_Error_Adm_Init_Loopback  = 1022,
     AgoraRtc_Error_Adm_Start_Loopback = 1023,
-    AgoraRtc_Error_Vdm_Camera_Not_Authorized = 1024,
+    AgoraRtc_Error_Vdm_Camera_Not_Authorized = 1501,
     // 1025, as warning for interruption of adm on ios
     // 1026, as warning for route change of adm on ios
 };
@@ -190,6 +190,28 @@ typedef NS_ENUM(NSUInteger, AgoraRtcQualityReportFormat) {
     AgoraRtc_QualityReportFormat_Json = 0,
     AgoraRtc_QualityReportFormat_Html = 1,
 };
+
+
+#if (!(TARGET_OS_IPHONE) && (TARGET_OS_MAC))
+
+typedef NS_ENUM(NSInteger, AgoraRtcDeviceType) {
+    AgoraRtc_DeviceType_Audio_Unknown = -1,
+    AgoraRtc_DeviceType_Audio_Recording = 0,
+    AgoraRtc_DeviceType_Audio_Playout = 1,
+    AgoraRtc_DeviceType_Video_Render = 2,
+    AgoraRtc_DeviceType_Video_Capture = 3,
+};
+
+__attribute__((visibility("default"))) @interface AgoraRtcDeviceInfo : NSObject
+
+@property (assign, nonatomic) int index;
+@property (assign, nonatomic) AgoraRtcDeviceType type; // 0: recording, 1: playback, 2: capture
+@property (copy, nonatomic) NSString* deviceId; //
+@property (copy, nonatomic) NSString* deviceName; //
+@end
+
+#endif
+
 
 __attribute__((visibility("default"))) @interface AgoraRtcVideoCanvas : NSObject
 
@@ -439,6 +461,18 @@ __attribute__((visibility("default"))) @interface AgoraRtcAudioVolumeInfo : NSOb
  *  @param quality The network quality
  */
 - (void)rtcEngine:(AgoraRtcEngineKit *)engine networkQuality:(AgoraRtcQuality)quality;
+
+#if (!(TARGET_OS_IPHONE) && (TARGET_OS_MAC))
+/**
+ *  the notificaitoin of device added removed
+ *
+ *  @param engine The engine kit
+ *  @param deviceId   the identification of device
+ *  @param deviceType type of device: -1: audio unknown; 0: audio recording ; 1: audio playout ; 2: render; 4: capture
+ *  @param state      state of device: 0: added; 1: removed
+ */
+- (void)rtcEngine:(AgoraRtcEngineKit *)engine device:(NSString*) deviceId type:(AgoraRtcDeviceType) deviceType stateChanged:(NSInteger) state;
+#endif
 
 /**
  *  Event of API call executed
@@ -704,7 +738,7 @@ __attribute__((visibility("default"))) @interface AgoraRtcEngineKit : NSObject
  *
  *  @return 0 when executed successfully. return minus value if failed.
  */
-- (int)startScreenCapture;
+- (int)startScreenCapture:(NSUInteger)windowId;
 
 
 /**
@@ -713,6 +747,9 @@ __attribute__((visibility("default"))) @interface AgoraRtcEngineKit : NSObject
  *  @return 0 when executed successfully. return minus value if failed.
  */
 - (int)stopScreenCapture;
+
+
+- (int)setScreenCaptureId:(NSUInteger)windowId;
 
 
 /**
@@ -899,8 +936,36 @@ __attribute__((visibility("default"))) @interface AgoraRtcEngineKit : NSObject
  */
 - (int)setChannelProfile:(AgoraRtcChannelProfile)profile;
 
+/**
+	* Specifying encryption secret enables built-in AES-128 encryption. Leaving channel will clear the secret specified in last channel
+	* @param [in] secret
+	*        secret to enable encryption
+	* @return return 0 if success or an error code
+	*/
+- (int)setEncryptionSecret:(NSString*)secret;
+
 - (int) startRecordingService:(NSString*)key;
 - (int) stopRecordingService:(NSString*)key;
 - (int) refreshRecordingServiceStatus;
+
+
+#if (!(TARGET_OS_IPHONE) && (TARGET_OS_MAC))
+
+- (NSArray*) enumerateDevices:(AgoraRtcDeviceType)type;  // return array of AgoraRtcDeviceInfo
+- (NSString*) getDeviceId:(AgoraRtcDeviceType)type;
+- (int) setDevice:(AgoraRtcDeviceType)type deviceId:(NSString *) deviceId;
+- (int) getDeviceVolume:(AgoraRtcDeviceType)type;
+- (int) setDeviceVolume:(AgoraRtcDeviceType)type volume:(int)volume;
+
+- (int) startRecordingDeviceTest:(int) indicationInterval;
+- (int) stopRecordingDeviceTest;
+
+- (int) startPlaybackDeviceTest:(NSString *) audioFileName;
+- (int) stopPlaybackDeviceTest;
+
+- (int) startCaptureDeviceTest:(NSView *) view;
+- (int) stopCaptureDeviceTest;
+#endif
+
 
 @end

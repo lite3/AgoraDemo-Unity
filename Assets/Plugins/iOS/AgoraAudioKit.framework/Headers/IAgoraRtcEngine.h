@@ -139,6 +139,9 @@ enum ERROR_CODE_TYPE
     ERR_INVALID_CHANNEL_NAME = 102,
     ERR_DYNAMIC_KEY_TIMEOUT = 109,
     ERR_INVALID_DYNAMIC_KEY = 110,
+	ERR_CONNECTION_INTERRUPTED = 111, // only used in web sdk
+	ERR_CONNECTION_LOST = 112, // only used in web sdk
+
     //1001~2000
     ERR_LOAD_MEDIA_ENGINE = 1001,
     ERR_START_CALL = 1002,
@@ -1109,6 +1112,14 @@ public:
     virtual int registerPacketObserver(IPacketObserver* observer) = 0;
 
 	virtual int setVideoRenderFactory(void* factory) = 0;
+
+	/**
+	* Specifying encryption secret enables built-in AES-128 encryption. Leaving channel will clear the secret specified in last channel
+	* @param [in] secret
+	*        secret to enable encryption
+	* @return return 0 if success or an error code
+	*/
+	virtual int setEncryptionSecret(const char* secret) = 0;
 };
 
 
@@ -1424,23 +1435,56 @@ public:
     int stopAudioRecording() {
         return m_parameter->setBool("che.audio.stop_recording", true);
     }
-
+#if defined(__APPLE__)
 	/**
 	* start screen capture
 	* @return return 0 if success or an error code
 	*/
-	int startScreenCapture() {
-		return m_parameter->setBool("che.video.screen_capture", true);
+	int startScreenCapture(unsigned int windowId) {
+		return m_parameter->setUInt("che.video.start_screen_capture", windowId);
 	}
 
-	/**
-	* stop screen capture
-	* @return return 0 if success or an error code
-	*/
-	int stopScreenCapture() {
-		return m_parameter->setBool("che.video.screen_capture", false);
-	}
+    /**
+     * specify window id to capture
+     * @return return 0 if success or an error code
+     */
+    int setScreenCaptureWindow(unsigned int windowId) {
+        return m_parameter->setUInt("che.video.set_screen_capture_window", windowId);
+    }
+    /**
+     * stop screen capture
+     * @return return 0 if success or an error code
+     */
+    int stopScreenCapture() {
+        return m_parameter->setBool("che.video.stop_screen_capture", true);
+    }
+#elif defined(_WIN32)
+    /**
+     * start screen capture
+     * @return return 0 if success or an error code
+     */
+    int startScreenCapture(HWND windowId) {
+        return m_parameter->setUInt("che.video.start_screen_capture", (unsigned int)windowId);
+    }
+    
+    /**
+     * specify window id to capture
+     * @return return 0 if success or an error code
+     */
+    int setScreenCaptureWindow(HWND windowId) {
+        return m_parameter->setUInt("che.video.set_screen_capture_window", (unsigned int)windowId);
+    }
+    /**
+     * stop screen capture
+     * @return return 0 if success or an error code
+     */
+    int stopScreenCapture() {
+        return m_parameter->setBool("che.video.stop_screen_capture", true);
+    }
+#endif
+    
 
+    
     /**
     * set path to save the log file
     * @param [in] filePath
