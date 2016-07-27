@@ -9,7 +9,7 @@ rem $NDK_ROOT/ndk-build -C "$DIR/src" NDK_MODULE_PATH=src NDK_APPLICATION_MK=$DI
 rem mv libs/armeabi/libnative.so ..
 
 echo Copy .so to Unity folder
-xcopy /Y  "libs\armeabi-v7a\libnative.so" "..\Assets\Plugins\Android\Agora\libs\armeabi-v7a\libnative.so"
+xcopy /Y /S  "libs\*" "..\Assets\Plugins\Android\Agora\libs\"
 
 echo Done!
 pause

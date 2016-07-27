@@ -11,7 +11,7 @@ $NDK_ROOT/ndk-build -C .  $*
 echo ""
 
 echo "Copy .so to Unity folder"
-cp -f libs/armeabi-v7a/libnative.so ../Assets/Plugins/Android/Agora/libs/armeabi-v7a/libnative.so
+cp -rf libs/* ../Assets/Plugins/Android/Agora/libs/
 
 echo ""
 echo "Done!"
